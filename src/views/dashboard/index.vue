@@ -1,20 +1,30 @@
 <template>
   <div class="dashboard-container">
-    <div class="dashboard-text">name: {{ name }}</div>
+    <el-row type="flex" justify="space-between">
+      <el-col :span="11">
+        <el-card>
+          <template #header> 机构概述 </template>
+        </el-card>
+      </el-col>
+      <el-col :span="11">
+        <el-card>
+          <template #header> 今日数据 </template>
+        </el-card>
+      </el-col>
+    </el-row>
+    <div>工作台</div>
   </div>
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import { mapGetters } from "vuex";
 
 export default {
-  name: 'Dashboard',
+  name: "Dashboard",
   computed: {
-    ...mapGetters([
-      'name'
-    ])
-  }
-}
+    ...mapGetters(["name"]),
+  },
+};
 </script>
 
 <style lang="scss" scoped>

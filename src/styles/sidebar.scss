@@ -159,7 +159,7 @@
   // mobile responsive
   .mobile {
     .main-container {
-      margin-left: 0px;
+      margin-left: $sideBarWidth; ///解决屏幕给缩小后，内容被侧边栏遮挡的问题      
     }
 
     .sidebar-container {
