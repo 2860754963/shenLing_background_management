@@ -4,6 +4,11 @@
       <el-col :span="11">
         <el-card>
           <template #header> 机构概述 </template>
+          <div>
+            <div>左</div>
+            <el-divider direction="vertical"></el-divider>
+            <div>右</div>
+          </div>
         </el-card>
       </el-col>
       <el-col :span="11">
