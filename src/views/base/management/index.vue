@@ -33,7 +33,7 @@
               </el-col>
               <el-col :span="8">
                 <el-form-item label="机构类型" disabled>
-                  <el-select v-model="formData.type" style="width:100%">
+                  <el-select v-model="formData.type" style="width: 100%">
                     <el-option label="一级转运" :value="1" />
                     <el-option label="二级转运" :value="2" />
                     <el-option label="网点" :value="3" />
@@ -44,7 +44,12 @@
             <el-form-item label="机构地址">
               <el-row type="flex" justify="space-around">
                 <el-col :span="8">
-                  <el-select v-model="formData.provinceId" placeholder="请选择省" style="width:98%" @change="getCityList($event, 'change')">
+                  <el-select
+                    v-model="formData.provinceId"
+                    placeholder="请选择省"
+                    style="width: 98%"
+                    @change="getCityList($event, 'change')"
+                  >
                     <el-option
                       v-for="item in provinceList"
                       :key="item.id"
@@ -54,7 +59,12 @@
                   </el-select>
                 </el-col>
                 <el-col :span="8">
-                  <el-select v-model="formData.cityId" placeholder="请选择市" style="width:98%" @change="getAreaList($event, 'change')">
+                  <el-select
+                    v-model="formData.cityId"
+                    placeholder="请选择市"
+                    style="width: 98%"
+                    @change="getAreaList($event, 'change')"
+                  >
                     <el-option
                       v-for="item in cityList"
                       :key="item.id"
@@ -64,7 +74,11 @@
                   </el-select>
                 </el-col>
                 <el-col :span="8">
-                  <el-select v-model="formData.countyId" placeholder="请选择区" style="width:100%">
+                  <el-select
+                    v-model="formData.countyId"
+                    placeholder="请选择区"
+                    style="width: 100%"
+                  >
                     <el-option
                       v-for="item in areaList"
                       :key="item.id"
@@ -107,7 +121,7 @@
           </el-form>
           <el-row type="flex" justify="center">
             <el-button type="primary" @click="saveDepart">
-              {{ isEdit ? '保存' : '编辑' }}
+              {{ isEdit ? "保存" : "编辑" }}
             </el-button>
           </el-row>
         </el-card>
@@ -122,7 +136,7 @@
             <el-table-column label="所属机构" prop="agency.name" />
             <el-table-column label="系统账户" prop="account" />
             <el-table-column label="系统角色">
-              <template v-slot="{row}">
+              <template v-slot="{ row }">
                 {{ row.roleNames[0] }}
               </template>
             </el-table-column>
@@ -161,9 +175,9 @@ import {
   getDepartDetail,
   getUserListByDepartId,
   getCityList,
-  saveDepart
-} from '@/api/base'
-import { transListToTreeData } from '@/utils'
+  saveDepart,
+} from "@/api/base";
+import { transListToTreeData } from "@/utils";
 export default {
   data() {
     return {
@@ -175,97 +189,97 @@ export default {
       pageParams: {
         page: 1,
         pageSize: 10,
-        total: 0
+        total: 0,
       },
       formData: {},
       provinceList: [], // 省份集合
       cityList: [], // 城市集合
-      areaList: [] // 地区集合
-    }
+      areaList: [], // 地区集合
+    };
   },
   created() {
-    this.getDepartTree()
-    this.getProvinceList() // 获取省份列表
+    this.getDepartTree();
+    this.getProvinceList(); // 获取省份列表
   },
   methods: {
     async getDepartTree() {
       this.departTree = transListToTreeData(
         JSON.parse(await getDepartTree()),
-        '0'
-      )
+        "0"
+      );
       // 选择第一个节点
-      this.currentNode = this.selectFirstNode(this.departTree)
-      this.$refs.tree.setCurrentKey(this.currentNode.id) // 选中某个节点
-      this.queryDetail() // 查询详情id
+      this.currentNode = this.selectFirstNode(this.departTree);
+      this.$refs.tree.setCurrentKey(this.currentNode.id); // 选中某个节点
+      this.queryDetail(); // 查询详情id
     },
     selectFirstNode(arr) {
-      let node = null
+      let node = null;
       if (arr[0].children && arr[0].children.length) {
-        node = this.selectFirstNode(arr[0].children)
+        node = this.selectFirstNode(arr[0].children);
       } else {
-        node = arr[0]
+        node = arr[0];
       }
-      return node
+      return node;
     },
     // 查询详情
     async queryDetail() {
-      this.loading = true
-      this.formData = await getDepartDetail(this.currentNode.id)
+      this.loading = true;
+      this.formData = await getDepartDetail(this.currentNode.id);
       // 处理一下数据的转化问题
-      this.formData.provinceId = this.formData.province?.id
-      this.formData.cityId = this.formData.city?.id
-      this.formData.countyId = this.formData.county?.id
+      this.formData.provinceId = this.formData.province?.id;
+      this.formData.cityId = this.formData.city?.id;
+      this.formData.countyId = this.formData.county?.id;
       // 获取对应的数据
-      this.formData.cityId && this.getCityList(this.formData.provinceId) // 获取对应的城市列表
-      this.formData.countyId && this.getAreaList(this.formData.cityId) // 获取对应的地区列表
+      this.formData.cityId && this.getCityList(this.formData.provinceId); // 获取对应的城市列表
+      this.formData.countyId && this.getAreaList(this.formData.cityId); // 获取对应的地区列表
 
-      await this.getUserListByDepartId()
-      this.loading = false
+      await this.getUserListByDepartId();
+      this.loading = false;
     },
     selectNode(data) {
-      this.currentNode = data
-      this.queryDetail()
+      this.currentNode = data;
+      this.queryDetail();
     },
     async getUserListByDepartId() {
       const { counts, items } = await getUserListByDepartId({
         ...this.pageParams,
-        agencyId: this.currentNode.id
-      })
-      this.list = items
-      this.pageParams.total = counts
+        agencyId: this.currentNode.id,
+      });
+      this.list = items;
+      this.pageParams.total = counts;
     },
     // 切换页码
     changePage(newPage) {
-      this.pageParams.page = newPage
-      this.getUserListByDepartId()
+      this.pageParams.page = newPage;
+      this.getUserListByDepartId();
     },
     // 获取省份
     async getProvinceList() {
-      this.provinceList = await getCityList()
+      this.provinceList = await getCityList();
     },
     // 获取城市列本
     async getCityList(parentId, type) {
-      this.cityList = await getCityList({ parentId })
-      type === 'change' && (this.formData.cityId = null)
+      this.cityList = await getCityList({ parentId });
+      type === "change" && (this.formData.cityId = null);
     },
     // 获取地区列表
     async getAreaList(parentId) {
-      this.areaList = await getCityList({ parentId })
+      this.areaList = await getCityList({ parentId });
     },
     // 保存机构信息
     async saveDepart() {
       if (this.isEdit) {
-        this.loading = true
-        await saveDepart(this.formData)
-        this.$message.success('修改成功')
-        this.isEdit = false
-        this.loading = false
+        this.loading = true;
+        await saveDepart(this.formData);
+        this.$message.success("修改成功");
+        this.isEdit = false;
+        this.loading = false;
       } else {
-        this.isEdit = true
+        this.isEdit = true;
       }
-    }
-  }
-}
+    },
+  },
+};
 </script>
 
 <style lang="scss" scoped>
@@ -290,5 +304,5 @@ export default {
   display: inline-block;
   margin-right: 6px;
 }
-</style>>
-
+</style>
+>

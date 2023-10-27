@@ -6,8 +6,8 @@
 - 账号: shenlingadmin , 密码:123456
 - 这个项目在基础模版上开始开发: https://gitee.com/shuiruohanyu/shenling-admin
 - git clone https://gitee.com/shuiruohanyu/shenling-admin
-
-需求：
+- api 文档:https://apifox.com/apidoc/shared-e9183912-ff44-44bf-a7ad-7aecbc125287/api-69687181
+  需求：
 
 - 1.工作台
 - 2.基础数据管理中的 机构作业范围，运费管理
