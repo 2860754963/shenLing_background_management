@@ -1,5 +1,5 @@
 <template>
-  <div v-loading="loading" class="main" element-loading-text="拼命加载中" element-loading-spinner="el-icon-loading" element-loading-background="rgba(0, 0, 0, 0.8)">
+  <div class="main">
     <div style="margin: 20px 10px 20px 10px; font-weight: 800">工作台</div>
     <el-row type="flex" justify="space-between" class="minwidthrow" style="margin-bottom: 20px; width: 1400px">
       <el-col :span="12">
@@ -49,7 +49,7 @@
           <template #header>
             <span>今日数据 </span>
             <el-button class="todybtn" type="text" @click="reload"><i class="el-icon-refresh" style="margin-right: 5px"></i>{{ todayDate }}</el-button>
-            <span></span>
+
           </template>
           <div style="
               display: flex;

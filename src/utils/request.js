@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { Message } from 'element-ui'
+import { Message, Loading } from 'element-ui'
 import store from '@/store'
 import { getToken } from '@/utils/auth'
 import router from '@/router'
@@ -10,12 +10,18 @@ const service = axios.create({
   // withCredentials: true, // send cookies when cross-domain requests
   timeout: 5000 // request timeout
 })
-
+let LoadingService
+let options = {
+  text: '正在加载中...',
+  spinner: 'el-icon-loading',
+  background: 'rgba(0, 0, 0, 0.7)'
+}
 // request interceptor
 service.interceptors.request.use(
   config => {
     // do something before request is sent
     if (store.getters.token) {
+      LoadingService = Loading.service(options);
       // let each request carry token
       // ['X-Token'] is a custom headers key
       // please modify it according to the actual situation
@@ -24,6 +30,7 @@ service.interceptors.request.use(
     return config
   },
   error => {
+    LoadingService.close()
     // do something with request error
     return Promise.reject(error)
   }
@@ -42,6 +49,7 @@ service.interceptors.response.use(
    * You can also judge the status by HTTP Status Code
    */
   response => {
+    LoadingService.close()
     if (response.data instanceof Blob) return response.data
     if (response.data.code === 1) {
       Message({ type: 'error', message: response.data.msg })
@@ -50,6 +58,7 @@ service.interceptors.response.use(
     return response?.data?.data
   },
   error => {
+    LoadingService.close()
     if (error.response?.status === 401) {
       Message({ type: 'error', message: '登录过期，请重新登录' })
       store.dispatch('user/logout')

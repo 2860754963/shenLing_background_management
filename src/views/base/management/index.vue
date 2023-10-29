@@ -1,18 +1,10 @@
 <template>
-  <div v-loading="loading" class="app-container">
+  <div class="app-container">
     <el-row>
       <el-col :span="4">
         <!-- 左侧树结构 -->
         <el-card class="left-tree">
-          <el-tree
-            ref="tree"
-            highlight-current
-            icon-class="el-icon-folder"
-            :data="departTree"
-            :props="{ label: 'name' }"
-            node-key="id"
-            @node-click="selectNode"
-          />
+          <el-tree ref="tree" highlight-current icon-class="el-icon-folder" :data="departTree" :props="{ label: 'name' }" node-key="id" @node-click="selectNode" />
         </el-card>
       </el-col>
       <el-col :span="20">
@@ -44,47 +36,18 @@
             <el-form-item label="机构地址">
               <el-row type="flex" justify="space-around">
                 <el-col :span="8">
-                  <el-select
-                    v-model="formData.provinceId"
-                    placeholder="请选择省"
-                    style="width: 98%"
-                    @change="getCityList($event, 'change')"
-                  >
-                    <el-option
-                      v-for="item in provinceList"
-                      :key="item.id"
-                      :label="item.name"
-                      :value="item.id"
-                    />
+                  <el-select v-model="formData.provinceId" placeholder="请选择省" style="width: 98%" @change="getCityList($event, 'change')">
+                    <el-option v-for="item in provinceList" :key="item.id" :label="item.name" :value="item.id" />
                   </el-select>
                 </el-col>
                 <el-col :span="8">
-                  <el-select
-                    v-model="formData.cityId"
-                    placeholder="请选择市"
-                    style="width: 98%"
-                    @change="getAreaList($event, 'change')"
-                  >
-                    <el-option
-                      v-for="item in cityList"
-                      :key="item.id"
-                      :label="item.name"
-                      :value="item.id"
-                    />
+                  <el-select v-model="formData.cityId" placeholder="请选择市" style="width: 98%" @change="getAreaList($event, 'change')">
+                    <el-option v-for="item in cityList" :key="item.id" :label="item.name" :value="item.id" />
                   </el-select>
                 </el-col>
                 <el-col :span="8">
-                  <el-select
-                    v-model="formData.countyId"
-                    placeholder="请选择区"
-                    style="width: 100%"
-                  >
-                    <el-option
-                      v-for="item in areaList"
-                      :key="item.id"
-                      :label="item.name"
-                      :value="item.id"
-                    />
+                  <el-select v-model="formData.countyId" placeholder="请选择区" style="width: 100%">
+                    <el-option v-for="item in areaList" :key="item.id" :label="item.name" :value="item.id" />
                   </el-select>
                 </el-col>
               </el-row>
@@ -149,19 +112,8 @@
             </el-table-column>
           </el-table>
           <!-- 只有大于一页时才切换分页 -->
-          <el-row
-            v-if="pageParams.total > pageParams.pageSize"
-            type="flex"
-            style="height: 60px"
-            justify="center"
-            align="middle"
-          >
-            <el-pagination
-              :total="pageParams.total"
-              :current-page="pageParams.page"
-              :page-size="pageParams.pageSize"
-              @current-change="changePage"
-            />
+          <el-row v-if="pageParams.total > pageParams.pageSize" type="flex" style="height: 60px" justify="center" align="middle">
+            <el-pagination :total="pageParams.total" :current-page="pageParams.page" :page-size="pageParams.pageSize" @current-change="changePage" />
           </el-row>
         </el-card>
       </el-col>
@@ -179,7 +131,7 @@ import {
 } from "@/api/base";
 import { transListToTreeData } from "@/utils";
 export default {
-  data() {
+  data () {
     return {
       loading: false,
       isEdit: false,
@@ -197,12 +149,12 @@ export default {
       areaList: [], // 地区集合
     };
   },
-  created() {
+  created () {
     this.getDepartTree();
     this.getProvinceList(); // 获取省份列表
   },
   methods: {
-    async getDepartTree() {
+    async getDepartTree () {
       this.departTree = transListToTreeData(
         JSON.parse(await getDepartTree()),
         "0"
@@ -212,7 +164,7 @@ export default {
       this.$refs.tree.setCurrentKey(this.currentNode.id); // 选中某个节点
       this.queryDetail(); // 查询详情id
     },
-    selectFirstNode(arr) {
+    selectFirstNode (arr) {
       let node = null;
       if (arr[0].children && arr[0].children.length) {
         node = this.selectFirstNode(arr[0].children);
@@ -222,7 +174,7 @@ export default {
       return node;
     },
     // 查询详情
-    async queryDetail() {
+    async queryDetail () {
       this.loading = true;
       this.formData = await getDepartDetail(this.currentNode.id);
       // 处理一下数据的转化问题
@@ -236,11 +188,11 @@ export default {
       await this.getUserListByDepartId();
       this.loading = false;
     },
-    selectNode(data) {
+    selectNode (data) {
       this.currentNode = data;
       this.queryDetail();
     },
-    async getUserListByDepartId() {
+    async getUserListByDepartId () {
       const { counts, items } = await getUserListByDepartId({
         ...this.pageParams,
         agencyId: this.currentNode.id,
@@ -249,25 +201,25 @@ export default {
       this.pageParams.total = counts;
     },
     // 切换页码
-    changePage(newPage) {
+    changePage (newPage) {
       this.pageParams.page = newPage;
       this.getUserListByDepartId();
     },
     // 获取省份
-    async getProvinceList() {
+    async getProvinceList () {
       this.provinceList = await getCityList();
     },
     // 获取城市列本
-    async getCityList(parentId, type) {
+    async getCityList (parentId, type) {
       this.cityList = await getCityList({ parentId });
       type === "change" && (this.formData.cityId = null);
     },
     // 获取地区列表
-    async getAreaList(parentId) {
+    async getAreaList (parentId) {
       this.areaList = await getCityList({ parentId });
     },
     // 保存机构信息
-    async saveDepart() {
+    async saveDepart () {
       if (this.isEdit) {
         this.loading = true;
         await saveDepart(this.formData);
@@ -300,7 +252,7 @@ export default {
   height: 6px;
   background: #1dc779;
   border-radius: 50%;
-  content: "";
+  content: '';
   display: inline-block;
   margin-right: 6px;
 }
