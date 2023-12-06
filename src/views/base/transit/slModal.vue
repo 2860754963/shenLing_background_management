@@ -1,20 +1,20 @@
 <template>
-  <el-dialog title="新增模板" :visible.sync="dialogFormVisible" width="40%" destroy-on-close>
+  <el-dialog :title="dialogTitle" :visible.sync="dialogFormVisible" width="40%" destroy-on-close>
     <el-form :model="form" :rules="rules" ref="form">
       <el-form-item label="模板类型" :label-width="formLabelWidth" prop="templateType">
         <el-select v-model="form.templateType" placeholder="请选择模板类型" style="width:100%;">
           <!-- 1-同城寄，2-省内寄，3-经济区互寄，4-跨省 -->
-          <el-option label="同城寄" value="1"></el-option>
-          <el-option label="省内寄" value="2"></el-option>
-          <el-option label="经济区互寄" value="3"></el-option>
-          <el-option label="跨省" value="4"></el-option>
+          <el-option label="同城寄" :value="1"></el-option>
+          <el-option label="省内寄" :value="2"></el-option>
+          <el-option label="经济区互寄" :value="3"></el-option>
+          <el-option label="跨省" :value="4"></el-option>
         </el-select>
       </el-form-item>
       <el-form-item label="运送类型" :label-width="formLabelWidth" prop="transportType">
         <el-select v-model="form.transportType" placeholder="请选择运送类型" style="width:100%;">
           <!-- 1-普快，2-特快 -->
-          <el-option label="普快" value="1"></el-option>
-          <el-option label="特快" value="2"></el-option>
+          <el-option label="普快" :value="1"></el-option>
+          <el-option label="特快" :value="2"></el-option>
         </el-select>
       </el-form-item>
       <el-form-item label="关联城市" :label-width="formLabelWidth" prop="associatedCityList">
@@ -55,6 +55,7 @@ export default {
   name: 'slmodal',
   data () {
     return {
+      dialogTitle: '新增运费模板',
       dialogFormVisible: false,
       form: {
         templateType: '',
@@ -109,27 +110,34 @@ export default {
         callback();
       }
     },
-    handelComfire () {
-      this.$refs.form.validate(async (valid) => {
-        if (valid) {
-          console.log(this.form);
-          let res = await saveFreight(this.form)
-          console.log(res);
-          alert('submit!');
+    async handelComfire () {
+      let res = await this.$refs.form.validate()
+      // console.log(res, "valadate res");
+      if (res) {
+        let resAdd = await saveFreight(this.form)
+        if (resAdd) {
+          this.$message({
+            message: '添加成功',
+            type: 'success'
+          })
+          this.$refs.form.resetFields()
+          this.close()
+          this.$emit('addOK')
         } else {
-          console.log('error submit!!');
-          return false;
+          this.$message({
+            message: '添加失败',
+            type: 'error'
+          })
         }
-      });
-
-
-      // this.$message({
-      //   message: '添加成功',
-      //   type: 'success'
-      // });
-      // this.close()
+      } else {
+        return false
+      }
     },
-    show () {
+    show (payload) {
+      payload || (this.dialogTitle = '新增运费模板')
+      payload && Object.assign(this.form, payload)
+      payload && (this.dialogTitle = '编辑运费模板')
+
       this.dialogFormVisible = true;
     },
     close () {

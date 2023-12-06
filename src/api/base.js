@@ -51,4 +51,11 @@ export function saveFreight (data) {
     data
   })
 }
+// 删除运费模板
+export function deleteFreight (id) {
+  return request({
+    url: `/carriages/${id}`,
+    method: 'delete'
+  })
+}
 

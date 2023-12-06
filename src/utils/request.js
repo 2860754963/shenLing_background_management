@@ -10,12 +10,13 @@ const service = axios.create({
   // withCredentials: true, // send cookies when cross-domain requests
   timeout: 5000 // request timeout
 })
-let LoadingService
+var LoadingService
 let options = {
   text: '正在加载中...',
   spinner: 'el-icon-loading',
   background: 'rgba(0, 0, 0, 0.7)'
 }
+LoadingService = Loading.service(options);
 // request interceptor
 service.interceptors.request.use(
   config => {
@@ -49,17 +50,14 @@ service.interceptors.response.use(
    * You can also judge the status by HTTP Status Code
    */
   response => {
-
+    LoadingService.close()
     if (response.data instanceof Blob) {
-      LoadingService.close()
       return response.data
     }
     if (response.data.code === 1) {
       Message({ type: 'error', message: response.data.msg })
-      LoadingService.close()
       return Promise.reject(new Error(response.data.msg))
     }
-    LoadingService.close()
     return response?.data?.data
   },
   error => {

@@ -9,19 +9,23 @@
         <el-table-column label="操作" align="center">
           <template slot-scope="scope">
             <el-button @click="handleEdit(scope.row)" type="text" size="small">编辑</el-button>
-            <el-button @click="handleDelete(scope.row)" type="text" size="small">删除</el-button>
+            <el-popconfirm confirm-button-text="确定" cancel-button-text="取消" title="确定删除吗？" style="margin-left: 10px;" @confirm="handleDelete(scope.row)">
+              <el-button slot="reference" type="text" size="small">删除</el-button>
+            </el-popconfirm>
+
           </template>
         </el-table-column>
       </el-table>
     </el-card>
-    <slModalVue ref="slmodal"></slModalVue>
+    <slModalVue ref="slmodal" @addOK="getfreightManage"></slModalVue>
   </div>
 </template>
 
 <script>
-import { freightManage } from '@/api/base'
+import { freightManage, deleteFreight } from '@/api/base'
 
 import slModalVue from './slModal.vue'
+import { Message } from 'element-ui'
 export default {
   components: {
     slModalVue
@@ -69,10 +73,23 @@ export default {
       console.log('add');
       this.$refs.slmodal.show()
     },
-    handleDelete (row) {
-      console.log('delete', row);
+    async handleDelete (row) {
+      let res = await deleteFreight(row.id)
+      if (res == null) {
+        Message({
+          message: '删除成功',
+          type: 'success'
+        })
+      } else {
+        Message({
+          message: '删除失败',
+          type: 'error'
+        })
+      }
+      this.getfreightManage()
     },
     handleEdit (row) {
+      this.$refs.slmodal.show(row)
       console.log('edit', row);
     },
     tableFormatter (r, c, v, i, item) {
@@ -92,8 +109,10 @@ export default {
       let res = await freightManage()
       if (res) {
         this.tableData = res
+      } else {
+        this.tableData = []
+
       }
-      console.log(res, "数据获取");
     }
 
   },
