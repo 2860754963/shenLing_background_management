@@ -90,7 +90,6 @@ export default {
     },
     handleEdit (row) {
       this.$refs.slmodal.show(row)
-      console.log('edit', row);
     },
     tableFormatter (r, c, v, i, item) {
       if (c.label === '关联城市') {

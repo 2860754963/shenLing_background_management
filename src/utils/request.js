@@ -16,7 +16,7 @@ let options = {
   spinner: 'el-icon-loading',
   background: 'rgba(0, 0, 0, 0.7)'
 }
-LoadingService = Loading.service(options);
+LoadingService = Loading;
 // request interceptor
 service.interceptors.request.use(
   config => {

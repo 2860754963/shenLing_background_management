@@ -112,12 +112,11 @@ export default {
     },
     async handelComfire () {
       let res = await this.$refs.form.validate()
-      // console.log(res, "valadate res");
       if (res) {
         let resAdd = await saveFreight(this.form)
         if (resAdd) {
           this.$message({
-            message: '添加成功',
+            message: '操作成功',
             type: 'success'
           })
           this.$refs.form.resetFields()
@@ -125,7 +124,7 @@ export default {
           this.$emit('addOK')
         } else {
           this.$message({
-            message: '添加失败',
+            message: '操作失败',
             type: 'error'
           })
         }
