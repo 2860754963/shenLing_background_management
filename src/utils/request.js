@@ -16,13 +16,12 @@ let options = {
   spinner: 'el-icon-loading',
   background: 'rgba(0, 0, 0, 0.7)'
 }
-LoadingService = Loading;
 // request interceptor
 service.interceptors.request.use(
   config => {
     // do something before request is sent
+    LoadingService = Loading.service(options);
     if (store.getters.token) {
-      LoadingService = Loading.service(options);
       // let each request carry token
       // ['X-Token'] is a custom headers key
       // please modify it according to the actual situation
@@ -31,6 +30,7 @@ service.interceptors.request.use(
     return config
   },
   error => {
+
     LoadingService.close()
     // do something with request error
     return Promise.reject(error)
@@ -51,6 +51,7 @@ service.interceptors.response.use(
    */
   response => {
     LoadingService.close()
+
     if (response.data instanceof Blob) {
       return response.data
     }
