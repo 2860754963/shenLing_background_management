@@ -32,3 +32,11 @@ export function updateCarType (data) {
     data
   })
 }
+// 获取车辆类型信息列表
+
+export function truckTypesimple () {
+  return request({
+    url: '/truckType/simple',
+    method: 'get'
+  })
+}

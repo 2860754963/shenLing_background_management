@@ -51,7 +51,6 @@ service.interceptors.response.use(
    */
   response => {
     LoadingService.close()
-
     if (response.data instanceof Blob) {
       return response.data
     }

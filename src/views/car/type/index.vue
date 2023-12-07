@@ -27,7 +27,7 @@
     </el-card>
     <el-card style="margin-top: 15px;">
       <el-button @click="handleadd" type="primary" style="margin-bottom: 20px;">新增车型</el-button>
-      <el-table :data="tableData" border style="width: 100%">
+      <el-table :data="tableData" style="width: 100%">
         <el-table-column align="center" :prop="item.keywords" :label="item.name" v-for="(item,index) in tablecolumData" :key="index">
         </el-table-column>
         <el-table-column label="操作" align="center">
@@ -36,7 +36,6 @@
             <el-popconfirm confirm-button-text="确定" cancel-button-text="取消" title="确定删除吗？" style="margin-left: 10px;" @confirm="handleDelete(scope.row)">
               <el-button slot="reference" type="text" size="small">删除</el-button>
             </el-popconfirm>
-
           </template>
         </el-table-column>
       </el-table>
