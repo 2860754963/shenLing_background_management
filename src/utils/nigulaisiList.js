@@ -14,8 +14,8 @@ export const nigulasiList = {
     }
   },
   methods: {
-    handleAdd () {
-      this.$refs.modal.show()
+    handleAdd (payload) {
+      this.$refs.modal.show(payload)
     },
     // 处理sizeChange改变
     handleSizeChange (val) {

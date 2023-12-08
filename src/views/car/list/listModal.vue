@@ -37,7 +37,7 @@ export default {
   },
   data () {
     return {
-      dialogTitle: '新增车辆',
+      dialogTitle: '新增',
       dialogFormVisible: false,
       form: {
         truckTypeId: '',
@@ -69,36 +69,47 @@ export default {
 
       },
       formLabelWidth: '120px',
+      url: {
+        add: '/truck',
+        // edit: `/truck/${this.form.id}`
+        edit: '',
+      }
     };
   },
   methods: {
     async handleAddConfirm () {
       let params = {
-        truckTypeId: this.form.truckTypeId,
-        licensePlate: this.form.licensePlate,
-        deviceGpsId: this.form.deviceGpsId,
+        ...this.form
       }
-      let res = await postAction('/truck', params)
-      console.log(res, "res");
+      let url
+      if (this.dialogTitle === '编辑') {
+        url = this.url.edit
+      } else {
+        url = `/truck/${this.form.id}`
+      }
+      let res = await postAction(url, params)
       if (res === null) {
         this.$message({
-          message: '添加成功',
+          message: '成功',
           type: 'success'
         })
         this.close()
         this.$emit('OK')
       } else {
         this.$message({
-          message: '添加失败',
+          message: '失败',
           type: 'error'
         })
       }
     },
 
     show (payload) {
-      payload || (this.dialogTitle = '新增车型')
-      payload && Object.assign(this.form, payload)
-      payload && (this.dialogTitle = '编辑车型')
+      if (payload) {
+        this.dialogTitle = '编辑'
+        Object.assign(this.form, payload)
+      } else {
+        this.dialogTitle = '新增'
+      }
       this.dialogFormVisible = true;
     },
     close () {

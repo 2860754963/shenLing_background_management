@@ -19,11 +19,22 @@ export default {
       title: '车辆列表'
     },
     component: () => import('@/views/car/list')
-  }, {
+  },
+  {
     path: 'back',
     meta: {
       title: '回车登记'
     },
     component: () => import('@/views/car/back')
-  }]
+  },
+  {
+    path: 'carDetalis',
+    meta: {
+      title: '车辆详情'
+    },
+    component: () => import('@/views/car/list/carDetalis.vue'),
+    hidden: true
+  }
+  ],
+
 }

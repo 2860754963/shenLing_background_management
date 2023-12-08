@@ -28,16 +28,16 @@
         </el-form>
       </el-card>
       <el-card style="margin-top: 15px;">
-        <el-button @click="handleAdd" type="primary" style="margin-bottom: 20px;">新增车辆</el-button>
+        <el-button @click="handleAdd(null)" type="primary" style="margin-bottom: 20px;">新增车辆</el-button>
         <el-table :data="dataSource">
           <el-table-column type="index" align="center">
           </el-table-column>
           <el-table-column align="center" v-for="(item,index) in tableColumn" :key="index" :label="item.name" :prop="item.keywords"></el-table-column>
           <el-table-column label="操作" align="center" width="260">
             <template slot-scope="scope">
-              <el-button @click="handleEdit(scope.row)" type="text" size="small">查看详情</el-button>
-              <el-button @click="handleEdit(scope.row)" type="text" size="small">启用/停用</el-button>
-              <el-button @click="handleEdit(scope.row)" type="text" size="small">配置司机</el-button>
+              <el-button @click="handleDetails(scope.row)" type="text" size="small">查看详情</el-button>
+              <el-button @click="handleStop(scope.row)" type="text" size="small">启用/停用</el-button>
+              <el-button @click="handleDervier(scope.row)" type="text" size="small">配置司机</el-button>
 
             </template>
           </el-table-column>
@@ -112,6 +112,20 @@ export default {
     }
   },
   methods: {
+    handleDetails (row) {
+      this.$router.push({
+        path: 'carDetalis',
+        query: {
+          id: row.id
+        }
+      })
+    },
+    handleDervier () {
+
+    },
+    handleStop () {
+
+    },
     searchReset () {
       this.queryParam = {
         ...this.paramPro,
