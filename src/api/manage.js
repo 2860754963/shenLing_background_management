@@ -14,3 +14,10 @@ export function postAction (url, data) {
     data,
   })
 }
+export function putAction (url, data) {
+  return request({
+    url,
+    method: 'put',
+    data,
+  })
+}

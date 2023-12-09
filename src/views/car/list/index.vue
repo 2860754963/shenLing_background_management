@@ -61,6 +61,7 @@ import listModal from '@/views/car/list/listModal'
 export default {
   name: 'carlist',
   mixins: [nigulasiList],
+
   components: {
     listModal
   },
@@ -116,7 +117,7 @@ export default {
       this.$router.push({
         path: 'carDetalis',
         query: {
-          id: row.id
+          id: row.id,
         }
       })
     },
