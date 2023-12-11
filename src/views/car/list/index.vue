@@ -35,10 +35,9 @@
           <el-table-column align="center" v-for="(item,index) in tableColumn" :key="index" :label="item.name" :prop="item.keywords"></el-table-column>
           <el-table-column label="操作" align="center" width="260">
             <template slot-scope="scope">
-              <el-button @click="handleDetails(scope.row)" type="text" size="small">查看详情</el-button>
-              <el-button @click="handleStop(scope.row)" type="text" size="small">启用/停用</el-button>
-              <el-button @click="handleDervier(scope.row)" type="text" size="small">配置司机</el-button>
-
+              <el-button @click="handleDetails(scope.row)" type="text">查看详情</el-button>
+              <el-button @click="handleUse(scope.row)" type="text">{{ scope.row.workStatus=='1'?'停用':'启用'}}</el-button>
+              <el-button @click="handleDervier(scope.row)" type="text">配置司机</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -50,20 +49,26 @@
       </el-card>
     </div>
     <listModal ref="modal" @OK="searchReset" :carTypelist="carTypelist"></listModal>
+    <configureDriver title="配置司机" ref="configDriver"></configureDriver>
+    <useStop ref="useStop"></useStop>
   </div>
 </template>
 
 <script>
 import { truckTypesimple } from '@/api/carManage.js'
 import { nigulasiList } from '@/utils/nigulaisiList'
-import { getAction } from '@/api/manage'
+import { getAction, putAction } from '@/api/manage'
 import listModal from '@/views/car/list/listModal'
+import configureDriver from './configureDriver.vue'
+import useStop from './useStop.vue'
 export default {
   name: 'carlist',
   mixins: [nigulasiList],
 
   components: {
-    listModal
+    listModal,
+    configureDriver,
+    useStop
   },
   data () {
     return {
@@ -121,11 +126,12 @@ export default {
         }
       })
     },
-    handleDervier () {
-
+    handleDervier (rowData) {
+      this.$refs.configDriver.show(rowData)
     },
-    handleStop () {
-
+    handleUse (rowData) {
+      this.$refs.useStop.show(rowData)
+      this.usevisible = true
     },
     searchReset () {
       this.queryParam = {

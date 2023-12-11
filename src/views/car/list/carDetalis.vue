@@ -101,15 +101,16 @@
 </template>
 
 <script>
+
 import { getAction, putAction, postAction } from '@/api/manage'
 import { truckTypesimple } from '@/api/carManage.js'
 import imageUpload from '@/views/car/list/imageUpload'
-import driveId from './driveId.vue'
+
 export default {
   name: 'carDetails',
   components: {
     imageUpload,
-    driveId
+
   },
   data () {
     return {
@@ -194,6 +195,7 @@ export default {
 
     handleCancel () {
       this.BaseInfoFormDisabled = !this.BaseInfoFormDisabled
+      this.driveIdFormDisabled = !this.driveIdFormDisabled
     },
     handleSave () {
       this.activeName === 'baseinfo' ? (
@@ -209,11 +211,11 @@ export default {
               truckTypeId,
               truckTypeName
             }).then(res1 => {
-
               this.$message({
                 message: '保存成功',
                 type: 'success'
               })
+              this.driveIdFormDisabled = !this.driveIdFormDisabled
               this.BaseInfoFormDisabled = !this.BaseInfoFormDisabled
 
             })
@@ -243,6 +245,7 @@ export default {
                 type: 'success'
               })
               this.driveIdFormDisabled = !this.driveIdFormDisabled
+              this.BaseInfoFormDisabled = !this.BaseInfoFormDisabled
             })
           }
         })
@@ -256,7 +259,7 @@ export default {
 
       let res = await getAction(`/truck/${id}/license`)
       if (res) {
-        res.picList = res.picture.split(',')
+        res.picture ? (res.picList = res.picture.split(',')) : (res.picList = [])
         Object.assign(this.driveIdForm, res)
       } else {
         this.$message({
@@ -264,7 +267,7 @@ export default {
           type: 'error'
         })
       }
-
+      this.driveIdForm.id = id
       console.log(res, "getdirveID");
     },
     handleClick () {
@@ -279,7 +282,7 @@ export default {
     async getCarInfo (payload) {
       let res = await getAction(`/truck/${payload}`)
       if (res) {
-        res.picList = res.picture.split(',')
+        res.picList ? (res.picList = res.picture.split(',')) : (res.picList = [])
         Object.assign(this.baseInfoForm, res)
       } else {
         this.$message({

@@ -1,22 +1,8 @@
 <template>
   <div class="login-container">
-    <video
-      ref="videoRef"
-      muted
-      width="100vw"
-      loop
-      class="back"
-      src="@/assets/back.mp4"
-    />
+    <video ref="videoRef" muted width="100vw" loop class="back" src="@/assets/back.mp4" />
     <el-card class="login-card">
-      <el-form
-        ref="loginForm"
-        :model="loginForm"
-        :rules="loginRules"
-        class="login-form"
-        auto-complete="on"
-        label-position="left"
-      >
+      <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form" auto-complete="on" label-position="left">
         <div class="title-container">
           <h3 class="title">
             <img src="@/assets/image/logo.png" alt="" />
@@ -27,35 +13,17 @@
           <span class="svg-container">
             <svg-icon icon-class="user" />
           </span>
-          <el-input
-            ref="username"
-            v-model="loginForm.account"
-            placeholder="用户名"
-            type="text"
-            tabindex="1"
-            auto-complete="on"
-          />
+          <el-input ref="username" v-model="loginForm.account" placeholder="用户名" type="text" tabindex="1" auto-complete="on" />
         </el-form-item>
 
         <el-form-item prop="password">
           <span class="svg-container">
             <svg-icon icon-class="password" />
           </span>
-          <el-input
-            :key="passwordType"
-            ref="password"
-            v-model="loginForm.password"
-            :type="passwordType"
-            placeholder="Password"
-            name="password"
-            tabindex="2"
-            auto-complete="on"
-            @keyup.enter.native="handleLogin"
-          />
+          <el-input :key="passwordType" ref="password" v-model="loginForm.password" :type="passwordType" placeholder="Password" name="password" tabindex="2" auto-complete="on"
+            @keyup.enter.native="handleLogin" />
           <span class="show-pwd" @click="showPwd">
-            <svg-icon
-              :icon-class="passwordType === 'password' ? 'eye' : 'eye-open'"
-            />
+            <svg-icon :icon-class="passwordType === 'password' ? 'eye' : 'eye-open'" />
           </span>
         </el-form-item>
         <el-form-item prop="password">
@@ -63,23 +31,12 @@
             <span class="svg-container">
               <i class="el-icon-success" />
             </span>
-            <el-input v-model="loginForm.code" />
-            <img
-              slot="append"
-              style="width: 100px"
-              :src="codeImgUrl"
-              alt=""
-              @click="debounceCode"
-            />
+            <el-input v-model="loginForm.code" @keyup.enter.native="handleLogin" />
+            <img slot="append" style="width: 100px" :src="codeImgUrl" alt="" @click="debounceCode" />
           </div>
         </el-form-item>
 
-        <el-button
-          :loading="loading"
-          type="primary"
-          style="width: 100%; height: 50px; margin-bottom: 30px"
-          @click.native.prevent="handleLogin"
-        >
+        <el-button :loading="loading" type="primary" style="width: 100%; height: 50px; margin-bottom: 30px" @click.native.prevent="handleLogin">
           登录
         </el-button>
       </el-form>
@@ -92,7 +49,7 @@ import { getCodeImg } from "@/api/user";
 import _ from "lodash";
 export default {
   name: "Login",
-  data() {
+  data () {
     const validatePassword = (rule, value, callback) => {
       if (value.length < 6) {
         callback(new Error("密码长度不能小于6位"));
@@ -128,10 +85,10 @@ export default {
       immediate: true,
     },
   },
-  created() {
+  created () {
     this.getCodeImg();
   },
-  mounted() {
+  mounted () {
     setTimeout(() => {
       this.$refs.videoRef.play();
     }, 1000);
@@ -140,7 +97,7 @@ export default {
     // }
   },
   methods: {
-    async getCodeImg() {
+    async getCodeImg () {
       this.loginForm.key = ~~(Math.random() * 10000000000); // key作为验证码的标识
       const result = await getCodeImg({ key: this.loginForm.key });
       // blob转base64
@@ -150,10 +107,10 @@ export default {
         this.codeImgUrl = e.target.result;
       };
     },
-    debounceCode() {
+    debounceCode () {
       _.debounce(this.getCodeImg, 500)();
     },
-    showPwd() {
+    showPwd () {
       if (this.passwordType === "password") {
         this.passwordType = "";
       } else {
@@ -163,7 +120,7 @@ export default {
         this.$refs.password.focus();
       });
     },
-    handleLogin() {
+    handleLogin () {
       this.$refs.loginForm.validate(async (valid) => {
         if (valid) {
           try {
