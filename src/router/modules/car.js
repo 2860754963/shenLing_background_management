@@ -34,7 +34,15 @@ export default {
     },
     component: () => import('@/views/car/list/carDetalis.vue'),
     hidden: true
-  }
+  },
+  {
+    path: 'driverDetalis',
+    meta: {
+      title: '司机详情'
+    },
+    component: () => import('@/views/car/list/driverDetails.vue'),
+    hidden: true
+  },
   ],
 
 }
