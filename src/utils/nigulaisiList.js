@@ -50,7 +50,7 @@ export const nigulasiList = {
     },
     // / 加载数据
     async loadData (arg, cb) {
-      if (!this.url.list) {
+      if (!this.url?.list) {
         this.$message({
           type: 'warning',
           message: '请设置url.list参数'

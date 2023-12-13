@@ -64,7 +64,6 @@ import useStop from './useStop.vue'
 export default {
   name: 'carlist',
   mixins: [nigulasiList],
-
   components: {
     listModal,
     configureDriver,
