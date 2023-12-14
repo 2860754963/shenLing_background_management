@@ -13,13 +13,26 @@ export default {
       title: '快递员管理'
     },
     component: () => import('@/views/user/courier')
-  }, {
+  },
+  {
+    // 作业范围分配
+    path: 'workrange',
+    meta: {
+      title: '作业范围分配'
+    },
+    component: () => import('@/views/user/courier/workRang.vue'),
+    hidden: true
+
+  },
+
+  {
     path: 'driver',
     meta: {
       title: '司机管理'
     },
     component: () => import('@/views/user/driver')
-  }, {
+  },
+  {
     path: 'workday',
     meta: {
       title: '排班管理'

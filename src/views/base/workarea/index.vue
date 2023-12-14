@@ -23,10 +23,10 @@
         </div>
         <div>
           <div>
-            <el-button type="primary" @click="starEdit" :disabled="!currentPathInfo.polygon">开始编辑</el-button>
-            <el-button type="primary" @click="stopEdit" :disabled="!currentPathInfo.polygon">结束编辑</el-button>
+            <el-button type="primary" @click="starEdit" v-if="editShow" :disabled="!currentPathInfo.polygon">开始编辑</el-button>
+            <el-button type="primary" @click="stopEdit" v-else :disabled="!currentPathInfo.polygon">结束编辑</el-button>
           </div>
-          <div class="" id="container">
+          <div id="container">
           </div>
 
         </div>
@@ -55,6 +55,7 @@ export default {
   },
   data () {
     return {
+      editShow: true,
       placeSearch: null,
       paramsPath: [],
       currentPathInfo: {},
@@ -96,7 +97,7 @@ export default {
       //   console.log(status, result, "status, result");
       //   if (status === 'complete' && result.info === 'OK') {
       //     // 查询成功时，result即对应匹配的POI信息
-      //     console.log(result, "result");
+      //     console.log(result, "result");   
       //     this.currentPositon.latitude = result.poiList.pois[0].location.lat;
       //     this.currentPositon.longitude = result.poiList.pois[0].location.lng;
       //     this.initMap()
@@ -105,6 +106,7 @@ export default {
     },
     starEdit () {
       this.polyEditor.open()
+      this.editShow = !this.editShow
     },
     async stopEdit () {
       this.polyEditor.close()
@@ -115,7 +117,7 @@ export default {
       }
       await saveBusinessSCope(params)
       Message.success('保存成功')
-
+      this.editShow = !this.editShow
     },
     async getBusinessscope (params) {
       let res = await getBusinessScope(params)

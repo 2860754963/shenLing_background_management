@@ -14,7 +14,7 @@
 
     </template>
     <el-card>
-      <div style="display: flex;flex-direction: column;justify-content: center; align-items: center;">
+      <div class="topStyle">
         <div>车牌号:{{ data.licensePlate}}</div>
         <div>车型:{{ data.truckTypeName}}</div>
         <div>车辆状态:
@@ -155,4 +155,11 @@ export default {
 </script> 
 
 <style scoped >
+.topStyle {
+}
+.topStyle div {
+  display: inline-block;
+  width: 180px;
+  height: 50px;
+}
 </style>
