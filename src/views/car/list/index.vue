@@ -117,6 +117,7 @@ export default {
     }
   },
   methods: {
+
     handleDetails (row) {
       this.$router.push({
         path: 'carDetalis',
@@ -164,8 +165,4 @@ export default {
 </script>
 
 <style>
-.bottompage {
-  text-align: center;
-  margin: 20px;
-}
 </style>

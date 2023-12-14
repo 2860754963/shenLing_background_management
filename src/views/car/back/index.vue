@@ -18,10 +18,9 @@
             clearable></el-cascader>
         </el-form-item>
         <el-form-item label="回车时间">
-          <el-date-picker v-model="queryParam.time" style="width:75%;" @change="handleTimePick" type="datetimerange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期"
+          <el-date-picker v-model="queryParam.time" style="width:190px;" @change="handleTimePick" type="datetimerange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期"
             value-format="yyyy-MM-dd HH-mm-ss">
           </el-date-picker>
-
         </el-form-item>
         <el-form-item label="车辆是否可用">
           <el-select v-model="queryParam.isAvailable" placeholder="请选择">
@@ -36,6 +35,23 @@
         </el-form-item>
       </el-form>
     </el-card>
+    <el-card style="margin-top: 15px;">
+      <el-table :data="dataSource">
+        <el-table-column :formatter="formatterTableCol" align="center" width="180" v-for="(item,index) in tableColumn" :key="index" :label="item.name" :prop="item.keywords">
+
+        </el-table-column>
+        <el-table-column label="操作" align="center" width="160" fixed="right">
+          <template slot-scope="scope">
+            <el-button @click="handleDetails(scope.row)" type="text">查看详情</el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+      <div class="bottompage">
+        <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="ipagination.current" :page-sizes="ipagination.pageSizeOptions"
+          :page-size="ipagination.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="ipagination.total">
+        </el-pagination>
+      </div>
+    </el-card>
   </div>
 </template>   
 
@@ -45,18 +61,69 @@ import { getAction, postAction } from '@/api/manage'
 import { getDepartTree } from '@/api/base'
 export default {
   mixins: [nigulasiList],
-  computed: {
 
-  },
   data () {
     return {
       startAre: [],
       url: {
         list: '/truck-return-register/pageQuery'
-      }
+      },
+      tableColumn: [{
+        name: '运输任务编号',
+        keywords: 'transportTaskId',
+      },
+      {
+        name: '起始地机构',
+        keywords: 'startAgencyName',
+      },
+      {
+        name: '目的地机构',
+        keywords: 'endAgencyName',
+      },
+      {
+        name: '运单数量',
+        keywords: 'transportOrderNumber',
+      },
+      {
+        name: '出车时间',
+        keywords: 'outStorageTime',
+      },
+      {
+        name: '回车时间',
+        keywords: 'intoStorageTime',
+      },
+      {
+        name: '车牌号码',
+        keywords: 'licensePlate',
+      },
+      {
+        name: '是否可用',
+        keywords: 'isAvailable',
+      },
+      ]
     }
   },
   methods: {
+    handleDetails (payload) {
+      this.$router.push({
+        path: '/car/receiptView',
+        query: {
+          id: payload.id
+        }
+      })
+    },
+    formatterTableCol (row, column, cellValue, index) {
+      if (typeof cellValue === 'boolean') {
+        if (cellValue === true) {
+          return '可用'
+        } else {
+          return '不可用'
+        }
+      } else {
+        return cellValue
+      }
+
+    },
     handleEndCa (value) {
       this.queryParam.endAgencyId = value[value?.length - 1]
     },
@@ -100,6 +167,7 @@ export default {
   },
   created () {
     this.getMechanism()
+    this.loadData(1)
   }
 }
 </script>

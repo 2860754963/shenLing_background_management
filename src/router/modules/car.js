@@ -27,6 +27,18 @@ export default {
     },
     component: () => import('@/views/car/back')
   },
+
+  // 回车查看
+  {
+    path: 'receiptView',
+    meta: {
+      title: '回车查看'
+    },
+    component: () => import('@/views/car/back/receiptView.vue'),
+    hidden: true
+  },
+
+
   {
     path: 'carDetalis',
     meta: {
