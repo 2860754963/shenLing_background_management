@@ -3,6 +3,7 @@ import { getAction } from '@/api/manage.js'
 export const nigulasiList = {
   data () {
     return {
+      tableColumn: [],
       queryParam: {},
       dataSource: [],
       ipagination: {

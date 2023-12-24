@@ -21,3 +21,10 @@ export function putAction (url, data) {
     data,
   })
 }
+export function deleteAction (url, data) {
+  return request({
+    url,
+    method: 'delete',
+    data,
+  })
+}

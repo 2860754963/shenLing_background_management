@@ -6,7 +6,7 @@
     <el-card>
       <el-form :model="queryParam" inline label-width="100px">
         <el-form-item label="员工账号">
-          <el-input v-model="queryParam.account" placeholder="请输入司机账号" style="width:100%;"></el-input>
+          <el-input v-model="queryParam.employeeNumber" placeholder="请输入司机账号" style="width:100%;"></el-input>
         </el-form-item>
         <el-form-item label="员工姓名">
           <el-input v-model="queryParam.name" placeholder="请输入司机姓名" style="width:100%;"></el-input>
@@ -31,12 +31,16 @@
       </el-form>
     </el-card>
     <el-card style="margin-top: 15px;">
+      <div style="margin-bottom: 15px;">
+        <el-button type="primary" @click="workSet">排班设置</el-button>
+        <el-button @click="bindWork">绑定排班</el-button>
+      </div>
       <el-table :data="dataSource">
         <el-table-column type="selection" width="30">
         </el-table-column>
         <el-table-column fixed align="center" width="140" v-for="(item,index) in tableColumn" :key="index" :label="item.name" :prop="item.keywords">
         </el-table-column>
-        <el-table-column align="center" v-for="(item,index) in tableColumnDays" :label="item.name" :prop="item.keywords">
+        <el-table-column align="center" v-for="(item,index) in tableColumnDays" :label="item.name" :prop="item.keywords" :key="index+9999">
           <!-- <template slot-scope="scope">
             <div>{{  scope}}</div>
           </template> -->
@@ -97,16 +101,27 @@ export default {
   computed: {},
   watch: {},
   methods: {
+    workSet () {
+      this.$router.push({
+        path: '/user/workset',
+
+      })
+
+    },
+    bindWork () { },
     handleSearch () {
-      let valueArray = this.queryParam.month.split('-')
-      this.days = this.getMonthDays(valueArray[0], valueArray[1])
-      this.tableColumnDays = []
-      for (let i = 1; i <= this.days; i++) {
-        this.tableColumnDays.push({
-          name: String(i),
-          keywords: `days${i}`
-        })
+      if (this.queryParam.month) {
+        let valueArray = this.queryParam.month.split('-')
+        this.days = this.getMonthDays(valueArray[0], valueArray[1])
+        this.tableColumnDays = []
+        for (let i = 1; i <= this.days; i++) {
+          this.tableColumnDays.push({
+            name: String(i),
+            keywords: `days${i}`
+          })
+        }
       }
+
       this.loadData(1)
     },
     getMonthDays (year = new Date().getFullYear(), month = new Date().getMonth() + 1) {

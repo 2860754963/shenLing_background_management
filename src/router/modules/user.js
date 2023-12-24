@@ -37,6 +37,16 @@ export default {
     meta: {
       title: '排班管理'
     },
-    component: () => import('@/views/user/workday')
-  }]
+    component: () => import('@/views/user/workday'),
+
+  },
+  {
+    path: 'workset',
+    meta: {
+      title: '排班设置'
+    },
+    component: () => import('@/views/user/workday/workSet.vue'),
+    hidden: true
+  }
+  ]
 }
