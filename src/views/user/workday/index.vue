@@ -104,7 +104,6 @@ export default {
     workSet () {
       this.$router.push({
         path: '/user/workset',
-
       })
 
     },

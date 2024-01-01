@@ -23,11 +23,34 @@
         </el-pagination>
       </div>
     </el-card>
-    <el-dialog title="新增工作模式" :visible.sync="dialogVisible" width="30%" :before-close="handleClose">
-      <span>这是一段信息</span>
+    <el-dialog title="新增工作模式" :visible="ADDdialogVisible" width="45%" :before-close="handleClose">
+      <div style="padding: 0 20px;">
+        <el-tabs v-model="activeNameTab" @tab-click="handleClickTab">
+          <el-tab-pane label="礼拜制" name="first">
+            <el-form :model="first" ref="firstForm" :rules="firstRules">
+              <el-form-item label="工作模式名称" label-width="120px" prop="name">
+                <el-input placeholder="请输入工作模式名称" v-model="first.name" style="width: 86%;"></el-input>
+              </el-form-item>
+              <el-form-item label="工作天数" label-width="120px" prop="workDay">
+                <el-checkbox-group v-model="first.workDay" @change="handleWorkDay">
+                  <el-checkbox v-for="item in days" :label="item" :key="item">{{item}}</el-checkbox>
+                </el-checkbox-group>
+                <span style="font-size: 14px;color: #ccc;margin: 0; padding: 0;">选中为工作时间，未选中为休息时间</span>
+              </el-form-item>
+              <el-form-item label="工作时间" label-width="120px" prop="time">
+                <el-time-picker style="width: 86%;" is-range v-model="first.time" value-format="HH:mm" format="HH:mm" range-separator="至" start-placeholder="开始时间" end-placeholder="结束时间"
+                  placeholder="选择时间范围">
+                </el-time-picker>
+              </el-form-item>
+            </el-form>
+
+          </el-tab-pane>
+          <el-tab-pane label="连续制" name="second">配置管理</el-tab-pane>
+        </el-tabs>
+      </div>
       <span slot="footer" class="dialog-footer">
-        <el-button @click="dialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
+        <el-button @click="ADDdialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="handleAddWorkdays">确 定</el-button>
       </span>
     </el-dialog>
   </div>
@@ -50,7 +73,33 @@ export default {
   components: {},
   data () {
     return {
-      dialogVisible: true,
+      daysResult: {},
+      firstRules: {
+        name: [
+          { required: true, message: '请输入工作模式名称', trigger: 'blur' },
+        ],
+        workDay: [
+          { required: true, message: '请选择工作天数', trigger: 'change' },
+        ],
+        time: [
+          { required: true, message: '请选择工作开始时间', trigger: 'change' },
+        ],
+
+      },
+      days: {
+        'monday': '周一',
+        'tuesday': '周二',
+        'wednesday': '周三',
+        'thursday': '周四',
+        'friday': '周五',
+        'saturday': '周六',
+        'sunday': '周日',
+      },
+      first: {
+        workDay: [],
+      },
+      activeNameTab: 'first',
+      ADDdialogVisible: false,
       tableColumn: [
         {
           name: '工作模式编号',
@@ -89,7 +138,68 @@ export default {
     }
   },
   methods: {
+    handleAddWorkdays () {
+      let that = this
+      this.activeNameTab == 'first' ? (
+        this.$refs.firstForm.validate(async (valid) => {
+          if (valid) {
+            let workPatternType = "1"
+            let { name, time, workDay } = that.first
+            let workStartMinute1 = time[0].split(':')[0] * 60 + time[0].split(':')[1] * 1
+            let workEndMinute1 = time[1].split(':')[0] * 60 + time[1].split(':')[1] * 1
+            let result = { ...that.daysResult, ...{ name, workStartMinute1, workEndMinute1, workPatternType } }
+            console.log(result, "result");
+            postAction('/work-patterns', result).then(res => {
+              that.$message({
+                type: 'success',
+                message: '添加成功!'
+              })
+              that.ADDdialogVisible = false
+              that.loadData(1)
+              this.first = {
+                workDay: [],
+              }
+              this.$refs.firstForm.resetFields()
+            })
 
+
+          } else {
+            return false
+          }
+        })
+      ) : (
+        this.$refs.secondForm.validate((valid) => {
+          if (valid) {
+            console.log(this.second, "this.second");
+            this.ADDdialogVisible = false
+          } else {
+            return false
+          }
+        })
+      )
+
+    },
+    handleWorkDay (value) {
+      console.log(value, "value");
+      let hadledday = {}
+      for (const key in this.days) {
+        value && value.length && value.forEach(item => {
+          if (item == this.days[key]) {
+            hadledday[key] = 1
+          }
+        })
+
+      }
+      let no = {}
+      for (const key in this.days) {
+        no[key] = 2
+      }
+      let result = { ...no, ...hadledday }//进行覆盖
+      this.daysResult = result
+
+    },
+    handleClickTab () { },
+    handleClose () { },
     handleDetel (row) {
       this.$confirm('此操作将永久删除该工作模式, 是否继续?', '提示', {
         confirmButtonText: '确定',
@@ -114,7 +224,7 @@ export default {
     },
     handleEdit () { },
     addWorkmode () {
-
+      this.ADDdialogVisible = true
     },
 
     goBack () {
