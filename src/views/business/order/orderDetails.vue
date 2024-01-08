@@ -104,6 +104,9 @@
       <div slot="header" class="clearfix">
         <span>货品信息</span>
       </div>
+      <div>
+
+      </div>
     </el-card>
   </div>
 </template>

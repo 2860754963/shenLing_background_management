@@ -7,10 +7,13 @@
       name="viewport"
       content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"
     />
-    <script src="http://cdn.staticfile.org/axios/0.18.1/axios.js"></script>
     <link rel="icon" href="<%= BASE_URL %>favicon.ico" />
 
     <title><%= webpackConfig.name %></title>
+    <!-- 引入样式 -->
+    <% for(var css of htmlWebpackPlugin.options.cdn.css) { %>
+    <link rel="stylesheet" href="<%=css%>" />
+    <% } %>
     <style>
       .toptitle {
         font-size: 20px;
@@ -31,6 +34,9 @@
         color: #bfbbbb;
       }
     </style>
+    <!-- <% for (var css in htmlWebpackPlugin.options.cdn.css) { %>
+    <link rel="stylesheet" href="<%=css%>" />
+    <% } %> -->
   </head>
   <body>
     <noscript>
@@ -43,7 +49,7 @@
     <!-- built files will be auto injected -->
     <div class="imagelogo">
       <img
-        src="./全国互联网安全管理服务平台.png"
+        src="./beianlogo.png"
         alt="Image"
         style="width: 13px; vertical-align: middle"
       />
@@ -60,5 +66,9 @@
         >豫B2-20240108-4</a
       >
     </div>
+    <!-- 引入JS -->
+    <% for(var js of htmlWebpackPlugin.options.cdn.js) { %>
+    <script src="<%=js%>"></script>
+    <% } %>
   </body>
 </html>

@@ -1,10 +1,37 @@
 "use strict";
 const path = require("path");
 const defaultSettings = require("./src/settings.js");
-
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin
 function resolve (dir) {
   return path.join(__dirname, dir);
 }
+
+
+let isproduction = process.env.NODE_ENV === 'production'
+let cdn = { css: [], js: [] }
+let externals = {}
+if (isproduction) {
+  externals = {
+    // 这里的value值是 引入的包的全局的变量名
+    'vue': 'Vue',
+    'element-ui': 'ELEMENT',
+  }
+  cdn = {
+    css: [
+      // element-ui css
+      'https://unpkg.com/element-ui@2.15.13/lib/theme-chalk/index.css',
+    ],
+    js: [
+      // vue must at first!
+      'https://lib.baomitu.com/vue/2.7.0/vue.js',
+      // element-ui js
+      'https://lib.baomitu.com/element-ui/2.15.13/index.js',
+    ]
+  }
+}
+
+
+
 
 const name = defaultSettings.title || "vue Admin Template"; // page title 
 
@@ -47,6 +74,8 @@ module.exports = {
     },
     // before: require('./mock/mock-server.js')
   },
+
+
   configureWebpack: {
     // provide the app's title in webpack's name field, so that
     // it can be accessed in index.html to inject the correct title.
@@ -56,8 +85,20 @@ module.exports = {
         "@": resolve("src"),
       },
     },
+    //  排除打包文件
+    externals: externals,
+
   },
+  // 这个是wep执行链条
   chainWebpack (config) {
+    // 进行cdn注入
+    config.plugin('html').tap(args => {
+      //args是注入html模板的一个变量  
+      args[0].cdn = cdn
+      return args
+    })
+    config.plugin('webpack-bundle-analyzer')
+      .use(BundleAnalyzerPlugin)
 
     // it can improve the speed of the first screen, it is recommended to turn on preload
     config.plugin("preload").tap(() => [
@@ -122,9 +163,9 @@ module.exports = {
       });
       // https:// webpack.js.org/configuration/optimization/#optimizationruntimechunk
       config.optimization.runtimeChunk("single");
-      config.externals({
-        axios: 'axios',
-      })
+
+
+
     });
   },
 };
