@@ -93,7 +93,7 @@
           <el-empty v-if="!list.length" description="当前数据为空" />
           <el-table v-else :data="list">
             <el-table-column type="index" label="序号" />
-            <el-table-column label="员工编号" prop="userId" />
+            <el-table-column label="员工编号" prop="userId" width="220" />
             <el-table-column label="员工姓名" prop="name" />
             <el-table-column label="手机号" prop="mobile" />
             <el-table-column label="所属机构" prop="agency.name" />

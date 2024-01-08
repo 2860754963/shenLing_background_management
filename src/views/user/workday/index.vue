@@ -33,17 +33,15 @@
     <el-card style="margin-top: 15px;">
       <div style="margin-bottom: 15px;">
         <el-button type="primary" @click="workSet">排班设置</el-button>
-        <el-button @click="bindWork">绑定排班</el-button>
+        <el-button @click="bindWork" :disabled="!(selecttableRow.length>0)">绑定排班</el-button>
       </div>
-      <el-table :data="dataSource">
+      <el-table :data="dataSource" @selection-change="handleSelecltRow">
         <el-table-column type="selection" width="30">
         </el-table-column>
         <el-table-column fixed align="center" width="140" v-for="(item,index) in tableColumn" :key="index" :label="item.name" :prop="item.keywords">
         </el-table-column>
         <el-table-column align="center" v-for="(item,index) in tableColumnDays" :label="item.name" :prop="item.keywords" :key="index+9999">
-          <!-- <template slot-scope="scope">
-            <div>{{  scope}}</div>
-          </template> -->
+
         </el-table-column>
       </el-table>
       <div class="bottompage">
@@ -51,6 +49,29 @@
           :page-size="ipagination.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="ipagination.total">
         </el-pagination>
       </div>
+
+      <el-dialog title="人工调整" :visible="showChangedialog" width="30%">
+        <div style="text-align: center;">
+          <el-radio-group v-model="radioCheck" @change="handleRadioChange">
+            <el-radio :label="1">礼拜制</el-radio>
+            <el-radio :label="2">连续制</el-radio>
+          </el-radio-group>
+        </div>
+        <div style="margin-top: 5%;padding-left: 20%;">
+          <el-form :model="modelName">
+            <el-form-item label="模式名称">
+              <el-select v-model="modelName.workPatternId" placeholder="请选择">
+                <el-option v-for="item in modeNameOptions" :key="item.id" :label="item.name" :value="item.id">
+                </el-option>
+              </el-select>
+            </el-form-item>
+          </el-form>
+        </div>
+        <span slot="footer" class="dialog-footer">
+          <el-button @click="showChangedialog = false">取 消</el-button>
+          <el-button type="primary" @click="handlePeoplechange">确 定</el-button>
+        </span>
+      </el-dialog>
     </el-card>
   </div>
 </template>
@@ -73,6 +94,15 @@ export default {
   components: {},
   data () {
     return {
+      modelName: {
+        workPatternId: ''
+      },
+      workMode: [],
+      modeNameOptions: [],
+      showChangedialog: false,
+      radioCheck: 1,
+      selecttableRow: [],
+      disBindwork: true,
       Are: [],
       url: {
         list: '/work-schedulings'
@@ -101,13 +131,54 @@ export default {
   computed: {},
   watch: {},
   methods: {
+    async handlePeoplechange () {
+      let result = []
+      this.selecttableRow.forEach(item => {
+        item.id && result.push(item.id)
+      })
+      let payload = {
+        userIdList: [...result],
+        workPatternId: this.modelName.workPatternId,
+        workPatternType: this.radioCheck
+      }
+      let res = await postAction('/work-schedulings', payload)
+      console.log(res, "res123456");
+      res == null ? (
+        this.$message({
+          type: 'success',
+          message: '绑定成功'
+        })
+      ) : (
+        this.$message({
+          type: 'error',
+          message: res
+        })
+      )
+      this.showChangedialog = false
+      this.loadData(1)
+    },
+    handleRadioChange (vale) {
+      this.modelName.workPatternId = ''
+      vale === 1 ? (
+        this.modeNameOptions = this.workMode[1]
+      )
+        :
+        (this.modeNameOptions = this.workMode[2])
+    },
+    handleSelecltRow (elect) {
+      this.selecttableRow = elect
+      console.log(this.selecttableRow, "this.selecttableRow");
+    },
     workSet () {
       this.$router.push({
         path: '/user/workset',
       })
 
     },
-    bindWork () { },
+    bindWork () {
+      this.showChangedialog = true
+
+    },
     handleSearch () {
       if (this.queryParam.month) {
         let valueArray = this.queryParam.month.split('-')
@@ -144,7 +215,11 @@ export default {
     },
     async getWorkmode () {
       let res = await getAction('/work-patterns/all')
-      console.log(res, "getworkmode");
+      if (res) {
+        this.workMode = res
+        this.modeNameOptions = res[1]
+      }
+
     },
     async getMechanism () {
       let res = await getDepartTree()
@@ -195,5 +270,8 @@ export default {
 }
 </script> 
 
-<style scoped lang="less">
+<style scoped  lang="less">
+/deep/ .el-dialog__footer {
+  text-align: center !important;
+}
 </style>

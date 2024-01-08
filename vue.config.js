@@ -6,7 +6,7 @@ function resolve (dir) {
   return path.join(__dirname, dir);
 }
 
-const name = defaultSettings.title || "vue Admin Template"; // page title
+const name = defaultSettings.title || "vue Admin Template"; // page title 
 
 // If your port is set to 80,
 // use administrator privileges to execute the command line.
@@ -39,6 +39,7 @@ module.exports = {
     proxy: {
       "/api": {
         target: "https://slwl-api.itheima.net/manager",
+        changeOrigin: true,
         pathRewrite: {
           "^/api": "",
         },
@@ -57,6 +58,7 @@ module.exports = {
     },
   },
   chainWebpack (config) {
+
     // it can improve the speed of the first screen, it is recommended to turn on preload
     config.plugin("preload").tap(() => [
       {
@@ -84,7 +86,6 @@ module.exports = {
         symbolId: "icon-[name]",
       })
       .end();
-
     config.when(process.env.NODE_ENV !== "development", (config) => {
       config
         .plugin("ScriptExtHtmlWebpackPlugin")
@@ -121,6 +122,9 @@ module.exports = {
       });
       // https:// webpack.js.org/configuration/optimization/#optimizationruntimechunk
       config.optimization.runtimeChunk("single");
+      config.externals({
+        axios: 'axios',
+      })
     });
   },
 };

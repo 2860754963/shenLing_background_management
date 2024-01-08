@@ -70,7 +70,6 @@ export default {
   },
   methods: {
     handleadd () {
-      console.log('add');
       this.$refs.slmodal.show()
     },
     async handleDelete (row) {

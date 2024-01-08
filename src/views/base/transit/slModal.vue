@@ -133,7 +133,15 @@ export default {
       }
     },
     show (payload) {
-      payload || (this.dialogTitle = '新增运费模板')
+      payload || ((this.dialogTitle = '新增运费模板') && (this.form = {
+        templateType: '',
+        transportType: '',
+        associatedCityList: [],
+        firstWeight: '',
+        continuousWeight: '',
+        lightThrowingCoefficient: ''
+      }))
+      console.log(payload, "payload...");
       payload && Object.assign(this.form, payload)
       payload && (this.dialogTitle = '编辑运费模板')
 

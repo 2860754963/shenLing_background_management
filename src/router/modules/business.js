@@ -13,6 +13,15 @@ export default {
     },
     component: () => import('@/views/business/order')
   }, {
+    path: 'orderDetails',
+    meta: {
+      title: '订单详情'
+    },
+    component: () => import('@/views/business/order/orderDetails'),
+    hidden: true
+
+  }
+    , {
     path: 'waybill',
     meta: {
       title: '运单管理'

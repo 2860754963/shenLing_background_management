@@ -16,6 +16,12 @@
               主页
             </el-dropdown-item>
           </router-link>
+          <el-dropdown-item divided @click.native="showVersion">
+            <span style="display:block;">版本信息</span>
+          </el-dropdown-item>
+          <el-dropdown-item divided @click.native="showgithub">
+            <span style="display:block;">本项目github链接</span>
+          </el-dropdown-item>
           <el-dropdown-item divided @click.native="logout">
             <span style="display:block;">退出登录</span>
           </el-dropdown-item>
@@ -43,10 +49,28 @@ export default {
     ])
   },
   methods: {
-    toggleSideBar() {
+    showgithub () {
+      let msg = 'https://github.com/2860754963/shenLing_background_management'
+      // 修改 alert的宽度
+      this.$alert(msg, 'github信息', {
+        // 这里使用了自定义类名 所以不需要加 scoped
+        customClass: 'alertWidth',
+        confirmButtonText: '确定',
+
+      })
+
+
+    },
+    showVersion () {
+      let version = '当前版本：V0.0.3 Beta  2024-01-06 10:51:00'
+      this.$alert(version, '版本信息', {
+        confirmButtonText: '确定'
+      })
+    },
+    toggleSideBar () {
       this.$store.dispatch('app/toggleSideBar')
     },
-    async logout() {
+    async logout () {
       await this.$store.dispatch('user/logout')
       this.$router.push(`/login?redirect=${this.$route.fullPath}`)
     }
@@ -54,24 +78,27 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss" >
+.alertWidth {
+  width: 500px !important;
+}
 .navbar {
   height: 50px;
   overflow: hidden;
   position: relative;
   background: #fff;
-  box-shadow: 0 1px 4px rgba(0,21,41,.08);
+  box-shadow: 0 1px 4px rgba(0, 21, 41, 0.08);
 
   .hamburger-container {
     line-height: 46px;
     height: 100%;
     float: left;
     cursor: pointer;
-    transition: background .3s;
-    -webkit-tap-highlight-color:transparent;
+    transition: background 0.3s;
+    -webkit-tap-highlight-color: transparent;
 
     &:hover {
-      background: rgba(0, 0, 0, .025)
+      background: rgba(0, 0, 0, 0.025);
     }
   }
 
@@ -98,10 +125,10 @@ export default {
 
       &.hover-effect {
         cursor: pointer;
-        transition: background .3s;
+        transition: background 0.3s;
 
         &:hover {
-          background: rgba(0, 0, 0, .025)
+          background: rgba(0, 0, 0, 0.025);
         }
       }
     }

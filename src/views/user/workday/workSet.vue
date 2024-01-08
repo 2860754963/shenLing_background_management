@@ -45,7 +45,26 @@
             </el-form>
 
           </el-tab-pane>
-          <el-tab-pane label="连续制" name="second">配置管理</el-tab-pane>
+          <el-tab-pane label="连续制" name="second">
+            <el-form :model="second" ref="secondForm" :rules="secondRules">
+              <el-form-item label="工作模式名称" label-width="120px" prop="name">
+                <el-input placeholder="请输入工作模式名称" v-model="second.name" style="width: 86%;"></el-input>
+              </el-form-item>
+              <el-form-item label="连续工作天数" label-width="120px">
+
+                <span style="margin-right: 10px;">上</span><el-input-number v-model="second.workDayNum" :min="0" :max="30" style="width: 30%;"></el-input-number><span style="margin: 0 10px;">天</span>
+                <span style="margin: 0 10px;">休</span>
+                <el-input-number v-model="second.restDayNum" :min="0" :max="30" style="width: 30%;"></el-input-number><span style="margin-left:  10px;">天</span>
+
+              </el-form-item>
+              <el-form-item label="工作时间" label-width="120px">
+                <el-time-picker style="width: 86%;" is-range v-model="second.time" value-format="HH:mm" format="HH:mm" range-separator="至" start-placeholder="开始时间" end-placeholder="结束时间"
+                  placeholder="选择时间范围">
+                </el-time-picker>
+              </el-form-item>
+            </el-form>
+
+          </el-tab-pane>
         </el-tabs>
       </div>
       <span slot="footer" class="dialog-footer">
@@ -73,6 +92,21 @@ export default {
   components: {},
   data () {
     return {
+      secondRules: {
+        name: [
+          { required: true, message: '请输入工作模式名称', trigger: 'blur' },
+        ],
+        workDayNum: [
+          { required: true, message: '请输入连续工作天数', trigger: 'blur' },
+        ],
+        restDayNum: [
+          { required: true, message: '请输入连续休息天数', trigger: 'blur' },
+        ],
+        time: [
+          { required: true, message: '请选择工作开始时间', trigger: 'change' },
+        ],
+      },
+      second: {},
       daysResult: {},
       firstRules: {
         name: [
@@ -148,7 +182,6 @@ export default {
             let workStartMinute1 = time[0].split(':')[0] * 60 + time[0].split(':')[1] * 1
             let workEndMinute1 = time[1].split(':')[0] * 60 + time[1].split(':')[1] * 1
             let result = { ...that.daysResult, ...{ name, workStartMinute1, workEndMinute1, workPatternType } }
-            console.log(result, "result");
             postAction('/work-patterns', result).then(res => {
               that.$message({
                 type: 'success',
@@ -170,8 +203,24 @@ export default {
       ) : (
         this.$refs.secondForm.validate((valid) => {
           if (valid) {
-            console.log(this.second, "this.second");
-            this.ADDdialogVisible = false
+            let workPatternType = "2"
+            let { name, time, workDayNum, restDayNum } = that.second
+            let workStartMinute1 = time[0].split(':')[0] * 60 + time[0].split(':')[1] * 1
+            let workEndMinute1 = time[1].split(':')[0] * 60 + time[1].split(':')[1] * 1
+            let result = { ...this.daysResult, ...{ name, workStartMinute1, workEndMinute1, workPatternType } }
+            postAction('/work-patterns', result).then(res => {
+              that.$message({
+                type: 'success',
+                message: '添加成功!'
+              })
+
+              that.loadData(1)
+              this.second = {}
+              this.$refs.firstForm.resetFields()
+              this.ADDdialogVisible = false
+            })
+
+
           } else {
             return false
           }
@@ -222,7 +271,10 @@ export default {
       })
 
     },
-    handleEdit () { },
+    handleEdit () {
+      // 进行编辑
+      console.log('编辑');
+    },
     addWorkmode () {
       this.ADDdialogVisible = true
     },

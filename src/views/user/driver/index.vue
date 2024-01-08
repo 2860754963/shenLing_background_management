@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
     <div class="toptitle">
-      司机管理 
+      司机管理
     </div>
     <el-card>
       <el-form :model="queryParam" inline label-width="100px">
