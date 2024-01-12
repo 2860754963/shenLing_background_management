@@ -1,6 +1,6 @@
 module.exports = {
 
-  title: '神领物流TMS管理系统',
+  title: '流程小站',
 
   /**
    * @type {boolean} true | false

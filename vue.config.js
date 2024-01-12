@@ -19,7 +19,7 @@ if (isproduction) {
   cdn = {
     css: [
       // element-ui css
-      'https://unpkg.com/element-ui@2.15.13/lib/theme-chalk/index.css',
+      'https://cdn.staticfile.org/element-ui/2.15.13/theme-chalk/index.css',
     ],
     js: [
       // vue must at first!

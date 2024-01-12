@@ -14,29 +14,6 @@
     <% for(var css of htmlWebpackPlugin.options.cdn.css) { %>
     <link rel="stylesheet" href="<%=css%>" />
     <% } %>
-    <style>
-      .toptitle {
-        font-size: 20px;
-        font-weight: bold;
-        margin-bottom: 20px;
-      }
-      .bottompage {
-        text-align: center;
-        margin: 20px;
-      }
-      .imagelogo {
-        height: 18px;
-        width: 100vw;
-        position: fixed;
-        bottom: 0;
-        text-align: center;
-        line-height: 18px;
-        color: #bfbbbb;
-      }
-    </style>
-    <!-- <% for (var css in htmlWebpackPlugin.options.cdn.css) { %>
-    <link rel="stylesheet" href="<%=css%>" />
-    <% } %> -->
   </head>
   <body>
     <noscript>
@@ -55,16 +32,16 @@
       />
 
       <a
-        href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=41088102000101"
+        href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=2024042783"
         target="_blank"
         style="margin-right: 20px"
-        >豫公网安备 41088102024010804号</a
+        >豫ICP备2024042783号</a
       >
-      <a
+      <!-- <a
         href="https://beian.miit.gov.cn/?spm=5176.20960838.J_9220772140.60.21fa2868fwOWr3#/Integrated/index"
         target="_blank"
         >豫B2-20240108-4</a
-      >
+      > -->
     </div>
     <!-- 引入JS -->
     <% for(var js of htmlWebpackPlugin.options.cdn.js) { %>

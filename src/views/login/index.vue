@@ -4,9 +4,9 @@
     <el-card class="login-card">
       <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form" auto-complete="on" label-position="left">
         <div class="title-container">
-          <h3 class="title">
-            <img src="@/assets/image/logo.png" alt="" />
-          </h3>
+          <h2 class="title">
+            流程小站
+          </h2>
         </div>
 
         <el-form-item prop="account">
@@ -205,6 +205,9 @@ $light_gray: #eee;
   justify-content: center;
   .login-card {
     z-index: 2;
+    position: absolute;
+    top: 20%;
+    display: block;
   }
   .login-form {
     position: relative;
@@ -235,10 +238,6 @@ $light_gray: #eee;
     position: relative;
     .title {
       text-align: center;
-      img {
-        height: 54px;
-        width: 200px;
-      }
     }
   }
 
