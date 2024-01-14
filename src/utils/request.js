@@ -10,7 +10,7 @@ const service = axios.create({
   // withCredentials: true, // send cookies when cross-domain requests
   timeout: 50000 // request timeout
 })
-var LoadingService
+let LoadingService
 let options = {
   text: '正在加载中...',
   spinner: 'el-icon-loading',
@@ -21,6 +21,7 @@ service.interceptors.request.use(
   config => {
     // do something before request is sent
     LoadingService = Loading.service(options);
+    console.log('service.interceptors.request   open');
     if (store.getters.token) {
       // let each request carry token
       // ['X-Token'] is a custom headers key
@@ -30,8 +31,8 @@ service.interceptors.request.use(
     return config
   },
   error => {
-
     LoadingService.close()
+    console.log('service.interceptors.request   close');
     // do something with request error
     return Promise.reject(error)
   }
@@ -50,6 +51,8 @@ service.interceptors.response.use(
    * You can also judge the status by HTTP Status Code
    */
   response => {
+
+    console.log('service.interceptors.request   close');
     LoadingService.close()
     if (response.data instanceof Blob) {
       return response.data
@@ -62,6 +65,8 @@ service.interceptors.response.use(
   },
   error => {
     LoadingService.close()
+
+    console.log('service.interceptors.request   close');
     if (error.response?.status === 401) {
       Message({ type: 'error', message: '登录过期，请重新登录' })
       store.dispatch('user/logout')

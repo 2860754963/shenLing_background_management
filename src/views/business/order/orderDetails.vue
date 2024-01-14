@@ -105,6 +105,7 @@
         <span>货品信息</span>
       </div>
       <div>
+        <editTable @saveOk="updateTablesource" :edColumn="prodInfoCol" :showSummary="true" :edSource="prodInfo" :showHandle="true" @deteleOk="getGoodsInfo"></editTable>
 
       </div>
     </el-card>
@@ -120,27 +121,51 @@
 * @Describe: 订单详情
 */
 import { getAction, postAction, putAction } from '@/api/manage'
+import editTable from './editTable.vue'
 export default {
   name: 'orderDetails',
   props: {},
-  components: {},
+  components: {
+    editTable
+  },
   data () {
     return {
+      prodInfoCol: [
+        {
+          prop: 'name',
+          label: '货品名称',
+        },
+        {
+          prop: 'goodsTypeName',
+          label: '货品类型',
+        },
+
+        {
+          prop: 'totalWeight',
+          label: '重量(千克)',
+        },
+        {
+          prop: 'totalVolume',
+          label: '体积(立方)',
+        },
+
+      ],
+      prodInfo: [],
       piockupForm: {},
       distance: 0,
       baseInfo: [
         {
           name: '发货方',
           icon: 'el-icon-s-promotion',
-          SName: '123',
-          Tel: '444',
-          Address: '555',
-          DetailsAddress: '6666'
+          SName: '',
+          Tel: '',
+          Address: '',
+          DetailsAddress: ''
         },
         {
           name: '收货方',
           icon: 'el-icon-s-custom',
-          SName: 'recipient',
+          SName: '',
           Tel: '',
           Address: '',
           DetailsAddress: ''
@@ -154,6 +179,10 @@ export default {
   computed: {},
   watch: {},
   methods: {
+    updateTablesource () {
+      this.getGoodsInfo()
+      this.$message.success('修改成功')
+    },
     async getDetails () {
       let res = await getAction(`/order-manager/order/${this.id}`)
       console.log(res, "res");
@@ -173,10 +202,17 @@ export default {
         this.distance = res.distance
         let { taskPickup: { agency: { name: piockupFormName }, assignedStatus, status: taskPickupStatus, courier: { name: courierName, mobile: courierMobile }, estimatedStartTime, estimatedEndTime } } = res
         this.piockupForm = { name: piockupFormName, type: this.filterassignedStatus(assignedStatus), status: this.filterPickupType(taskPickupStatus), people: courierName, tel: courierMobile, forseeTime: estimatedStartTime, coompleTime: estimatedEndTime }
+        this.getGoodsInfo()
       }
     },
     goBack () {
       this.$router.go(-1)
+    },
+    hanldegoodsType (array) {
+      array.forEach(item => {
+        item.goodsTypeName = item.goodsType.name
+        item.goodsTypeNameId = item.goodsType.id
+      })
     },
     //   // 1为新任务、2为已完成、3为已取消
     filterassignedStatus (value) {
@@ -235,10 +271,18 @@ export default {
           return ''
       }
     },
+    async getGoodsInfo () {
+      let res = await getAction(`/order-manager/cargo?orderId=${this.id}`)
+      console.log(res, "goodsinfo");
+      this.hanldegoodsType(res)
+      this.prodInfo = res
+    }
   },
   created () {
     this.id = this.$route.query.id
     this.getDetails()
+
+
   },
   mounted () {
   },
