@@ -62,7 +62,7 @@ export default {
 
     },
     showVersion () {
-      let version = '当前版本：V0.0.3 Beta  2024-01-12 10:51:00'
+      let version = '当前版本：V0.0.3 Beta  2024-01-14 10:51:00'
       this.$alert(version, '版本信息', {
         confirmButtonText: '确定'
       })

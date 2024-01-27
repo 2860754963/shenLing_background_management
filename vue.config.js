@@ -97,8 +97,8 @@ module.exports = {
       args[0].cdn = cdn
       return args
     })
-    config.plugin('webpack-bundle-analyzer')
-      .use(BundleAnalyzerPlugin)
+    // config.plugin('webpack-bundle-analyzer')
+    //   .use(BundleAnalyzerPlugin)
 
     // it can improve the speed of the first screen, it is recommended to turn on preload
     config.plugin("preload").tap(() => [
